@@ -16,7 +16,7 @@
 //
 // DEPENDENCIES
 //
-// C standard library - stdlib.h stdio.h string.h
+// C standard library - stdint.h stdio.h stdlib.h string.h
 //
 // LICENSE
 //
@@ -29,20 +29,21 @@
 #ifndef SNG_TERMINAL_H
 #define SNG_TERMINAL_H
 
+#include <stdint.h>
 #include <stdlib.h> // strtol
 #include <stdio.h>  // printf
 #include <string.h> // memmove
 
-typedef          float f32;
-typedef         double f64;
-typedef   signed char  s8;
-typedef   signed short s16;
-typedef   signed int   s32;
-typedef unsigned char  u8;
-typedef unsigned short u16;
-typedef unsigned int   u32;
-typedef          u8    b8;
-typedef          u32   b32;
+typedef    float f32;
+typedef   double f64;
+typedef   int8_t s8;
+typedef  int16_t s16;
+typedef  int32_t s32;
+typedef  uint8_t u8;
+typedef uint16_t u16;
+typedef uint32_t u32;
+typedef       u8 b8;
+typedef      u32 b32;
 
 #ifndef SNG_ASSERT
 #define SNG_ASSERT(x)
