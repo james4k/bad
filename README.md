@@ -8,4 +8,4 @@ The plan, though:
 Single-file libraries, a la [stb](https://github.com/nothings/stb).
 Implementation, documentation, and license all in a single C header file.
 
-"sng" is sort of shorthand for "single", from "single-file".
+"sng" is sort of shorthand for "single", from "single-file library".
