@@ -8,7 +8,7 @@ fi
 
 mkdir -p bin
 
-FLAGS="-I.. -Werror -Wall -Wpadded -Winline -Wconversion -Wcast-align"
+FLAGS="-g -I.. -Werror -Wall -Wpadded -Winline -Wconversion -Wcast-align"
 
 if [ "$1" == "-v" ]; then
 	set -x
@@ -19,3 +19,6 @@ cc -o bin/build_c_test $FLAGS build_c_test.c
 
 cc -o bin/build_cpp_test $FLAGS build_cpp_test.cpp
 ./bin/build_cpp_test
+
+cc -o bin/terminal_test $FLAGS terminal_test.cpp
+./bin/terminal_test
