@@ -41,32 +41,32 @@ typedef uint32_t u32;
 typedef uint64_t u64;
 typedef float    f32;
 
-#ifndef SNGRAND_API
-#define SNGRAND_API
+#ifndef SNG_RAND_API
+#define SNG_RAND_API
 #endif
 
 // Values from Marsaglia.
-#define SNGRAND_CMWC_CYCLE 4096
-#define SNGRAND_CMWC_C_MAX 809430660
+#define SNG_RAND_CMWC_CYCLE 4096
+#define SNG_RAND_CMWC_C_MAX 809430660
 
-// SngRand_State stores the state of the random number generator.
+// SngRand stores the state of the random number generator.
 typedef struct {
-	u32 Q[SNGRAND_CMWC_CYCLE];
+	u32 Q[SNG_RAND_CMWC_CYCLE];
 	u32 c;
-} SngRand_State;
+} SngRand;
 
-#ifndef SNGRAND_NO_STDLIB
-// sngrand_init initializes state with the provided seed and values from C's
+#ifndef SNG_RAND_NO_STDLIB
+// sngRandInit initializes state with the provided seed and values from C's
 // rand() implementation. Define SNG_RAND_NO_STDLIB if you plan to initialize
 // the Q and c fields yourself, and do not want to include the stdlib.
-SNGRAND_API void sngrand_init(SngRand_State *state, u32 seed);
+SNG_RAND_API void sngRandInit(SngRand *state, u32 seed);
 #endif
 
-// sngrand_u32 returns a random integer between 0 and 2^32.
-SNGRAND_API u32 sngrand_u32(SngRand_State *state);
+// sngRandU32 returns a random integer between 0 and 2^32.
+SNG_RAND_API u32 sngRandU32(SngRand *state);
 
-// sngrand_f32 returns a random float between 0.0 and 1.0
-SNGRAND_API f32 sngrand_f32(SngRand_State *state);
+// sngRandF32 returns a random float between 0.0 and 1.0
+SNG_RAND_API f32 sngRandF32(SngRand *state);
 
 #endif // SNG_RAND_H
 
@@ -76,35 +76,35 @@ SNGRAND_API f32 sngrand_f32(SngRand_State *state);
 
 #include <stdlib.h>
 
-// _sngrand_rand32 makes 32 bit random number (some systems use 16 bit RAND_MAX)
-static u32 _sngrand_rand32() {
-    u32 result = (rand() << 16) | rand();
+// _sngRandRand32 makes 32 bit random number (some systems use 16 bit RAND_MAX)
+static u32 _sngRandRand32() {
+    u32 result = ((u32)rand() << 16) | (u32)rand();
     return result;
 }
 
-SNGRAND_API void sngrand_init(SngRand_State *state, u32 seed) {
+SNG_RAND_API void sngRandInit(SngRand *state, u32 seed) {
     srand(seed);
-    for (int i = 0; i < SNGRAND_CMWC_CYCLE; i++) {
-		state->Q[i] = _sngrand_rand32();
+    for (int i = 0; i < SNG_RAND_CMWC_CYCLE; i++) {
+		state->Q[i] = _sngRandRand32();
 	}
     do {
-		state->c = _sngrand_rand32();
-	} while (state->c >= SNGRAND_CMWC_C_MAX);
+		state->c = _sngRandRand32();
+	} while (state->c >= SNG_RAND_CMWC_C_MAX);
 }
 
 #endif // !SNG_RAND_NO_STDLIB
 
-SNGRAND_API u32 sngrand_u32(SngRand_State *state) {
-    static u32 i = SNGRAND_CMWC_CYCLE - 1;
+SNG_RAND_API u32 sngRandU32(SngRand *state) {
+    static u32 i = SNG_RAND_CMWC_CYCLE - 1;
     u64 t = 0;
     u64 a = 18782;      // from Marsaglia
     u32 r = 0xfffffffe; // from Marsaglia
     u32 x = 0;
 
-    i = (i + 1) & (SNGRAND_CMWC_CYCLE - 1);
+    i = (i + 1) & (SNG_RAND_CMWC_CYCLE - 1);
     t = a * state->Q[i] + state->c;
     state->c = t >> 32;
-    x = t + state->c;
+    x = (u32)t + state->c;
     if (x < state->c) {
         x++;
         state->c++;
@@ -113,8 +113,8 @@ SNGRAND_API u32 sngrand_u32(SngRand_State *state) {
     return state->Q[i] = r - x;
 }
 
-SNGRAND_API f32 sngrand_f32(SngRand_State *state) {
-	return (f32)sngrand_u32(state) / 4294967296.0f;
+SNG_RAND_API f32 sngRandF32(SngRand *state) {
+	return (f32)sngRandU32(state) / 4294967296.0f;
 }
 
 #endif // SNG_RAND_IMPLEMENTATION
