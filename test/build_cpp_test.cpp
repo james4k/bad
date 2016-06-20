@@ -1,3 +1,6 @@
+#define SNG_RAND_IMPLEMENTATION
+#include "sng_rand.h"
+
 #define SNG_TERMINAL_IMPLEMENTATION
 #include "sng_terminal.h"
 
